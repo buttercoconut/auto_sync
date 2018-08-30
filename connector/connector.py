@@ -1,22 +1,37 @@
-import configparser
 import paramiko
+from datetime import datetime
+from traceback import format_exc
 
-def connection():
+def connection(config):
 
-    config = configparser.ConfigParser()
-    config.read('../config/local.conf')
+    log = ""
 
     ipaddress = config['connect']['ipaddress']
-    port = config['connect']['port']
-    username = config['connect']['username']
-    passwd = config['connect']['passwd']
+    try:
+        port = config['connect']['port']
+    except:
+        port = 22
+    try:
+        username = config['connect']['username']
+    except:
+        log += "Null username "
+    try:
+        passwd = config['connect']['passwd']
+    except:
+        log += "Null password "
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(ipaddress, port=port, username=username, password=passwd)
 
-    sftp = ssh.open_sftp()
+    try:
+        ssh.connect(ipaddress, port=port, username=username, password=passwd, timeout=10)
+        log += "connect success : " + ipaddress + ":" + port + "[00]"
+    except:
+        if"socket.timeout" in str(format_exc()):
+            log += str(datetime.now()) + " : connection timeout![01]"
+        elif "socket.gaierror" in str(format_exc()):
+            log += str(datetime.now()) + " : nodename nor servname provided, or not known![02]"
+        else:
+            log += "unknown error![03]"
 
-    sftp.get('/home/yutw/data/uptime.log', 'temp.log')
-
-    ssh.close()
+    return ssh, log
