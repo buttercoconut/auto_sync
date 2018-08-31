@@ -25,13 +25,13 @@ def connection(config):
 
     try:
         ssh.connect(ipaddress, port=port, username=username, password=passwd, timeout=10)
-        log += "connect success : " + ipaddress + ":" + port + "[00]"
+        log += str(datetime.now()) + " : connect success to " + ipaddress + ":" + port + "[00]"
     except:
         if"socket.timeout" in str(format_exc()):
             log += str(datetime.now()) + " : connection timeout![01]"
         elif "socket.gaierror" in str(format_exc()):
             log += str(datetime.now()) + " : nodename nor servname provided, or not known![02]"
         else:
-            log += "unknown error![03]"
+            log += str(datetime.now()) + " : unknown error![03]"
 
     return ssh, log
