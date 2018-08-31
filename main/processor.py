@@ -33,7 +33,7 @@ if __name__ == "__main__":
         if opt == "send":
             SFTP(ssh, config).send()
 
-        elif opt == "resv":
-            SFTP(ssh, config).resv()
+        elif opt == "recv":
+            SFTP(ssh, config).recv()
 
         ssh.close()
