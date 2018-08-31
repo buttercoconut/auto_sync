@@ -19,7 +19,7 @@ class SFTP(object):
         stdin, stdout, stderr = self.ssh.exec_command("ls " + self.dest)
         dest_file_path = stdout.read().split()
         for each in dest_file_path:
-            self.dest_list.append(each.decode('ascii'))
+            self.dest_list.append(each.decode('utf-8'))
         local_file_path = glob(self.local + "/*")
         for each in local_file_path:
             self.local_list.append(each.replace(self.local + "/", ""))
