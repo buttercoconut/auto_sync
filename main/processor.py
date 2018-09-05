@@ -30,10 +30,10 @@ if __name__ == "__main__":
     # file sync
     if log[-4:] == "[00]":
 
-        if opt == "send":
-            SFTP(ssh, config).send()
-
-        elif opt == "recv":
+        if opt == "recv":
             SFTP(ssh, config).recv()
+
+        elif opt == "send":
+            SFTP(ssh, config).send()
 
         ssh.close()
