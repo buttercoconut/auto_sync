@@ -59,12 +59,12 @@ class SFTP(object):
                 dest_size = dest_dict[each]['size']
                 if each not in list(local_dict.keys()):
                     if dest_format is 'd':
-                        add_list += self.dir_proc("recv_c", localpath, destpath, each)
+                        add_list += self.dir_proc("recv_c", localpath + "/" + filename, destpath + "/" + filename, each)
                     else:
                         add_list.append([destpath + "/" + filename + "/" + each, localpath + "/" + filename + "/" + each])
                 else:
                     if dest_format is 'd':
-                        add_list += self.dir_proc("recv_r", localpath, destpath, each)
+                        add_list += self.dir_proc("recv_r", localpath + "/" + filename, destpath + "/" + filename, each)
                     else:
                         if dest_size != local_dict[each]['size']:
                             add_list.append([destpath + "/" + filename + "/" + each, localpath + "/" + filename + "/" + each + "_" + str(datetime.now())[:10]])
@@ -85,12 +85,12 @@ class SFTP(object):
                 local_size = local_dict[each]['size']
                 if each not in list(dest_dict.keys()):
                     if local_format is 'd':
-                        add_list += self.dir_proc("send_c", localpath, destpath, each)
+                        add_list += self.dir_proc("send_c", localpath + "/" + filename, destpath + "/" + filename, each)
                     else:
                         add_list.append([localpath + "/" + filename + "/" + each, destpath + "/" + filename + "/" + each])
                 else:
                     if local_format is 'd':
-                        add_list += self.dir_proc("send_r", localpath, destpath, each)
+                        add_list += self.dir_proc("send_r", localpath + "/" + filename, destpath + "/" + filename, each)
                     else:
                         if local_size != local_dict[each]['size']:
                             add_list.append([localpath + "/" + filename + "/" + each, destpath + "/" + filename + "/" + each + "_" + str(datetime.now())[:13]])
