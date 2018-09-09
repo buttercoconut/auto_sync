@@ -13,10 +13,16 @@ def subprocess_open_when_shell_true(command):
 class SFTP(object):
 
     def __init__(self, ssh, config):
+        self.overwrite = ""
         self.ssh = ssh
         self.sftp = ssh.open_sftp()
         self.local = config['local']['dir']
         self.dest = config['dest']['dir']
+        try:
+            if config['option']['overwrite'] == 'false':
+                self.overwrite = "_" + str(datetime.now())[:16]
+        except:
+            pass
 
 
     def dest_list(self, ssh, destpath):
@@ -67,7 +73,7 @@ class SFTP(object):
                         add_list += self.dir_proc("recv_r", localpath + "/" + filename, destpath + "/" + filename, each)
                     else:
                         if dest_size != local_dict[each]['size']:
-                            add_list.append([destpath + "/" + filename + "/" + each, localpath + "/" + filename + "/" + each + "_" + str(datetime.now())[:10]])
+                            add_list.append([destpath + "/" + filename + "/" + each, localpath + "/" + filename + "/" + each + self.overwrite])
 
             return add_list
 
@@ -92,8 +98,8 @@ class SFTP(object):
                     if local_format is 'd':
                         add_list += self.dir_proc("send_r", localpath + "/" + filename, destpath + "/" + filename, each)
                     else:
-                        if local_size != local_dict[each]['size']:
-                            add_list.append([localpath + "/" + filename + "/" + each, destpath + "/" + filename + "/" + each + "_" + str(datetime.now())[:13]])
+                        if local_size != dest_dict[each]['size']:
+                            add_list.append([localpath + "/" + filename + "/" + each, destpath + "/" + filename + "/" + each + self.overwrite])
 
             return add_list
 
@@ -116,7 +122,7 @@ class SFTP(object):
                     get_list += self.dir_proc("recv_r", self.local, self.dest, each)
                 else:
                     if dest_size != local_dict[each]['size']:
-                        get_list.append([self.dest + "/" + each, self.local + "/" + each + "_" + str(datetime.now())[:13]])
+                        get_list.append([self.dest + "/" + each, self.local + "/" + each + self.overwrite])
 
 
         for each in get_list:
@@ -143,8 +149,8 @@ class SFTP(object):
                 if local_format is 'd':
                     put_list += self.dir_proc("send_r", self.local, self.dest, each)
                 else:
-                    if local_size != local_dict[each]['size']:
-                        put_list.append([self.local + "/" + each, self.dest + "/" + each + "_" + str(datetime.now())[:10]])
+                    if local_size != dest_dict[each]['size']:
+                        put_list.append([self.local + "/" + each, self.dest + "/" + each + self.overwrite])
 
 
         for each in put_list:
