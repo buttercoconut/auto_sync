@@ -4,12 +4,9 @@ from datetime import datetime
 
 dir = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(dir, '../'))
-sys.path.insert(0, os.path.join(dir, '../connector'))
-sys.path.insert(0, os.path.join(dir, '../sftp'))
-sys.path.insert(0, os.path.join(dir, '../observer'))
 
-import connector
-from sftp import SFTP
+from connector import connector
+from sftp.sftp import SFTP
 import observer
 
 if __name__ == "__main__":
